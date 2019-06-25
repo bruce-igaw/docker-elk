@@ -1,5 +1,16 @@
 actions:
   1:
+    action: snapshot
+    options:
+      repository: s3-backup
+    filters:
+    - filtertype: age
+      souce: name
+      direction: older
+      unit: days
+      unit_count: ${UNIT_COUNT}
+      timestring: "%Y.%m.%d"
+  2:
     action: delete_indices
     description: >-
       Delete indices. Find which to delete by first limiting the list to logstash-
