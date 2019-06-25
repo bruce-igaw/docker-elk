@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+  elasticsearch:
+    image: 373464800694.dkr.ecr.ap-northeast-1.amazonaws.com/adbrix/logmanager/elasticsearch
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms8g -Xmx8g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 16g
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+  logstash:
+    image: 373464800694.dkr.ecr.ap-northeast-1.amazonaws.com/adbrix/logmanager/logstash
+    environment:
+      - "LS_JAVA_OPRTS=-Xms1g -Xmx1g"
+    volumes:
+      - esdata1:/opt/logstash/persistance/data
+    mem_limit: 2g
+    ports:
+      - 5044:5044
+      - 9600:9600
+    command: -f /config-dir/logstash.conf
+
+  kibana:
+    image: 373464800694.dkr.ecr.ap-northeast-1.amazonaws.com/adbrix/logmanager/kibana
+    mem_limit: 512m
+    ports:
+      - 5601:5601
+
+  elastalert:
+    image: 373464800694.dkr.ecr.ap-northeast-1.amazonaws.com/adbrix/logmanager/elastalert
+    mem_limit: 512m
+
+volumes:
+  esdata1:
+    driver: local
+
