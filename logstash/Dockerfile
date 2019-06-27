@@ -7,3 +7,4 @@ FROM docker.elastic.co/logstash/logstash:${ELK_VERSION}
 # Example: RUN logstash-plugin install logstash-filter-json
 RUN logstash-plugin install logstash-input-beats
 RUN logstash-plugin install logstash-output-s3
+RUN logstash-plugin install logstash-output-amazon-es
